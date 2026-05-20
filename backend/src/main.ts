@@ -34,8 +34,8 @@ async function bootstrap() {
     ['SIGINT', 'SIGTERM', 'SIGUSR2'].forEach((s) => process.on(s, () => shutdown(s)));
 
     const config = new DocumentBuilder()
-        .setTitle('ACCT Backend')
-        .setDescription('API docs for ACCT platform')
+        .setTitle('ACCT Platform API')
+        .setDescription('Association Culturelle Canado-Tunisienne Platform API')
         .setVersion('1.0')
         .addBearerAuth()
         .build();

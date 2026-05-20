@@ -11,8 +11,23 @@ export class EventsService {
         return this.prisma.event.create({ data });
     }
 
-    async findAll() {
-        return this.prisma.event.findMany({ orderBy: { startAt: 'asc' } });
+    async findAll(skip = 0, take = 20) {
+        return this.prisma.event.findMany({
+            where: { status: 'published' },
+            skip,
+            take,
+            orderBy: { startDate: 'asc' },
+            include: {
+                createdBy: {
+                    select: {
+                        id: true,
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                    },
+                },
+            },
+        });
     }
 
     async findOne(id: string) {

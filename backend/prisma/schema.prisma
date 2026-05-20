@@ -37,11 +37,27 @@ model Organization {
 
 model Event {
   id          String   @id @default(uuid())
-  title       String
-  description String?
-  startAt     DateTime
-  endAt       DateTime
+  // Add multi-language fields
+  titleEn       String
+  titleFr       String
+  titleAr       String?
+  descriptionEn String?
+  descriptionFr String?
+  descriptionAr String?
+
+  // Fix date fields
+  startDate   DateTime
+  endDate     DateTime
+
+  // Add status and additional fields
+  status      String    @default("draft")
+  category    String?
+  location    String?
+  address     String?
+  city        String?
   capacity    Int
+  ticketPrice Int       @default(0)
+
   createdById String
   createdBy   User     @relation("creator", fields: [createdById], references: [id])
   bookings    Booking[]
