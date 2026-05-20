@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: acct_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+
+# Notes:
+# - This compose file creates a local Postgres 15 instance for development.
+# - The matching DATABASE_URL for Prisma is:
+#   postgresql://postgres:postgres@localhost:5432/acct_dev?schema=public

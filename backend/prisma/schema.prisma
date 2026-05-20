@@ -1,0 +1,112 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]  @relation("creator")
+  bookings  Booking[]
+  mediaAssets MediaAsset[]
+  refreshTokens RefreshToken[]
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  description String?
+  createdAt DateTime @default(now())
+  events    Event[]
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  startAt     DateTime
+  endAt       DateTime
+  capacity    Int
+  createdById String
+  createdBy   User     @relation("creator", fields: [createdById], references: [id])
+  bookings    Booking[]
+  organizationId String?
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  quantity  Int
+  totalPrice Int
+  status    String
+  payment   Payment?
+  createdAt DateTime @default(now())
+}
+
+model Payment {
+  id                   String  @id @default(uuid())
+  booking              Booking @relation(fields: [bookingId], references: [id])
+  bookingId            String  @unique
+  stripePaymentIntentId String?
+  amount               Int
+  currency             String  @default("USD")
+  status               String
+  createdAt            DateTime @default(now())
+}
+
+model Article {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  content     String
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MediaAsset {
+  id        String   @id @default(uuid())
+  url       String
+  mimeType  String
+  size      Int
+  ownerId   String?
+  owner     User?    @relation(fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model WebhookEvent {
+  id         String   @id @default(uuid())
+  eventId    String   @unique
+  type       String?
+  processedAt DateTime @default(now())
+}
