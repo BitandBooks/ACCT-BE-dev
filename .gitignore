@@ -16,3 +16,4 @@ pnpm-debug.log*
 *serviceAccount*.json
 firebase-adminsdk*.json
 acct-dev-firebase-adminsdk-*.json
+*.tsbuildinfo
