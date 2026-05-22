@@ -28,7 +28,7 @@ export class PaymentsController {
         const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
         const rawBody = (req as any).rawBody
         try {
-            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2022-11-15' })
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET || '', { apiVersion: '2022-11-15' })
             const event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret)
 
             // Record event id for idempotency. If the record already exists, skip processing.

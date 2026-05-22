@@ -6,7 +6,7 @@ import { PrismaService } from '../prisma/prisma.service'
 export class PaymentsService {
     private stripe: Stripe
     constructor(private prisma: PrismaService) {
-        const key = process.env.STRIPE_SECRET_KEY || ''
+        const key = process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET || ''
         this.stripe = new Stripe(key, { apiVersion: '2022-11-15' })
     }
 
